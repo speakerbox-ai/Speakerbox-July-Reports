@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Farsa Restaurant Manjeri Report</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js CDN for creating interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6; /* Light gray background */
+        color: #1f2937; /* Dark gray text color */
+      }
+      .collapsible-header {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .collapsible-content {
+        display: block;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        max-height: 1000px; /* A large value to allow the content to expand */
+        opacity: 1;
+      }
+      .collapsible-content.hidden {
+        max-height: 0;
+        opacity: 0;
+        padding: 0; /* Remove padding when hidden */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      th {
+        background-color: #f9fafb;
+        font-weight: 600;
+      }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      .filter-button {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+      }
+      .filter-button.active {
+        background-color: #8B4513; /* SaddleBrown */
+        color: white;
+      }
+      /* New styling for scrollable table container */
+      .scrollable-table-container {
+        max-height: 400px; /* Set a max height */
+        overflow-y: auto; /* Enable vertical scrolling */
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        background-color: #fff;
+        padding: 1rem;
+      }
+      /* Print-specific CSS */
+      @media print {
+        body {
+          background-color: #fff;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .collapsible-content.hidden {
+          display: block !important;
+          max-height: none !important;
+          opacity: 1 !important;
+        }
+        .collapsible-header {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+        .page-break {
+          page-break-before: always;
+        }
+        .scrollable-table-container {
+          max-height: none; /* No max height for print */
+          overflow-y: visible; /* No scrolling for print */
+        }
+      }
+    </style>
+  </head>
+  <body class="p-4 sm:p-8">
+    <div
+      class="max-w-7xl mx-auto bg-white shadow-xl rounded-3xl p-6 sm:p-10 mb-10"
+    >
+      <!-- Dashboard Header -->
+      <img
+        class="max-h-[70px] mb-5 object-contain w-max"
+        src="https://res.cloudinary.com/dghxwxviy/image/upload/v1755693451/black_svg_speakerbox_a7r6im.svg"
+        alt="Speaker Box Logo"
+      />
+      <header
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10"
+      >
+        <div class="text-center sm:text-left mb-4 sm:mb-0">
+          <h1 class="text-3xl sm:text-5xl font-bold text-[#8B4513] mb-2">
+            Farsa Restaurant Manjeri
+          </h1>
+          <h2 class="text-xl sm:text-2xl text-gray-800 font-medium">
+            Interactive Analytics Report
+          </h2>
+          <p class="text-sm sm:text-lg text-gray-500 mt-2">
+            Last 30 Days (July 1 - July 31)
+          </p>
+        </div>
+        <button
+          id="printButton"
+          onclick="window.print()"
+          class="no-print bg-[#8B4513] text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-[#6e370f] transition-colors duration-200"
+        >
+          Print Report
+        </button>
+      </header>
+
+      <!-- Main Content Grid -->
+      <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Instagram Overall Metrics Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Instagram Overall Performance
+          </h3>
+          <div id="overallPerformanceContent">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">724,581</span>
+                <span class="text-gray-500">Instagram Views (88.7% from ads)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">4,201</span>
+                <span class="text-gray-500">Total Profile Activity (+75.8% vs previous month)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">130</span>
+                <span class="text-gray-500">New Followers (Net: +18, 8,013 total)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">596,740</span>
+                <span class="text-gray-500">Accounts Reached (+3,194.7% vs previous month)</span>
+              </div>
+            </div>
+
+            <!-- Link Taps -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Instagram Link Taps
+              </h4>
+              <p class="text-gray-600 text-sm">
+                <span class="text-[#8B4513] font-bold">46</span> external link
+                taps recorded. (+119.0% vs previous month)
+              </p>
+            </div>
+
+            <!-- Follower Growth Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                New Followers (Net: +18)
+              </h4>
+              <canvas id="followerGrowthChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Facebook Overall Metrics Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Facebook Overall Performance
+          </h3>
+          <div id="facebookOverallPerformanceContent">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">703,209</span>
+                <span class="text-gray-500">Facebook Views</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">535</span>
+                <span class="text-gray-500">Page Engagements</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">21</span>
+                <span class="text-gray-500">New Followers</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">86,427</span>
+                <span class="text-gray-500">Accounts Reached</span>
+              </div>
+            </div>
+
+            <!-- Link Taps -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Facebook Link Taps
+              </h4>
+              <p class="text-gray-600 text-sm">
+                <span class="text-[#8B4513] font-bold">70</span> external link
+                taps recorded.
+              </p>
+            </div>
+
+            <!-- Follower Growth Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                New Followers (Net: +21)
+              </h4>
+              <canvas id="facebookFollowerGrowthChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Instagram Content & Audience Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Instagram Content & Audience
+          </h3>
+          <div id="contentAndAudienceContent">
+            <!-- Views by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Views by Content Type (Instagram)
+              </h4>
+              <canvas id="viewsByTypeChart"></canvas>
+            </div>
+
+            <!-- Interactions by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Interactions by Content Type (Total: 1,968, 12.4% from ads)
+              </h4>
+              <canvas id="interactionsByTypeChart"></canvas>
+            </div>
+
+            <!-- Audience Demographics -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Audience Demographics
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p class="text-gray-600 font-medium mb-2">Gender</p>
+                  <ul class="text-sm text-gray-600 space-y-1">
+                    <li>Men: 76.9%</li>
+                    <li>Women: 23.1%</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="text-gray-600 font-medium mb-2">Age Range</p>
+                  <ul class="text-sm text-gray-600 space-y-1">
+                    <li>13-17: 1.2%</li>
+                    <li>18-24: 19.2%</li>
+                    <li>25-34: 53.1%</li>
+                    <li>35-44: 21.2%</li>
+                    <li>45-54: 3.8%</li>
+                    <li>55-64: 1.0%</li>
+                    <li>65+: 0.5%</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mb-4">
+                <p class="text-gray-600 font-medium mb-2">Top Locations (Towns/Cities)</p>
+                <ul class="text-sm text-gray-600 space-y-1">
+                  <li>Manjeri: 12.9%</li>
+                  <li>Nilambur: 8.0%</li>
+                  <li>Tirur: 7.6%</li>
+                  <li>Malappuram: 3.1%</li>
+                  <li>Calicut: 3.0%</li>
+                </ul>
+              </div>
+              <div class="bg-gray-100 rounded-xl p-4 shadow-sm h-72">
+                <h5 class="text-lg font-semibold text-gray-800 mb-2">Most Active Times</h5>
+                <canvas id="mostActiveTimesChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Facebook Content & Audience Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Facebook Content & Audience
+          </h3>
+          <div id="facebookContentAndAudienceContent">
+            <!-- Views by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Views by Content Type (Facebook)
+              </h4>
+              <canvas id="facebookViewsByTypeChart"></canvas>
+            </div>
+
+            <!-- Interactions by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Interactions by Content Type (Estimated)
+              </h4>
+              <canvas id="facebookInteractionsByTypeChart"></canvas>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Google My Business Analytics Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Google My Business Analytics
+          </h3>
+          <div id="googleAnalyticsContent">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">5,826</span>
+                <span class="text-gray-500">Business Profile Interactions</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">16,533</span>
+                <span class="text-gray-500">Profile Views</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">2,905</span>
+                <span class="text-gray-500">Calls</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">2,134</span>
+                <span class="text-gray-500">Direction Requests</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">55</span>
+                <span class="text-gray-500">Website Clicks</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Search Breakdown -->
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Search Breakdown
+                </h4>
+                <div class="scrollable-table-container">
+                  <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                      <tr>
+                        <th class="py-3 px-6 rounded-tl-lg">Search Term</th>
+                        <th class="py-3 px-6 rounded-tr-lg">Count</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          restaurants
+                        </td>
+                        <td class="py-4 px-6">5,757</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          farsa restaurant, rajiv gandhi bypass, karuvambram, manjeri, kerala
+                        </td>
+                        <td class="py-4 px-6">1,263</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          farsa manjeri
+                        </td>
+                        <td class="py-4 px-6">470</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          restaurants near me
+                        </td>
+                        <td class="py-4 px-6">344</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          farsa restaurant
+                        </td>
+                        <td class="py-4 px-6">337</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Platform & Device Breakdown Chart -->
+              <div class="bg-white rounded-xl p-4 shadow-sm h-80">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Platform & Device Breakdown
+                </h4>
+                <canvas id="platformBreakdownChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Profile Activity & Top Content Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2"
+        >
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Profile Activity & Top Content
+          </h3>
+          <div id="profileActivityContent">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <!-- Profile Activity Metrics -->
+              <div>
+                <div
+                  class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start mb-4"
+                >
+                  <span class="text-4xl font-bold text-gray-900">4,201</span>
+                  <span class="text-gray-500">Total Profile Activity</span>
+                  <span class="text-gray-500 text-sm"
+                    >Instagram profile visits: 4,155</span
+                  >
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-gray-600 bg-white rounded-xl p-4 shadow-sm"
+                >
+                  <li><b>Instagram Profile Visits:</b> 4,155 (+75.5%)</li>
+                  <li><b>Instagram External Link Taps:</b> 46 (+119.0%)</li>
+                  <li><b>Facebook Page Visits:</b> 535</li>
+                  <li><b>Facebook Link Taps:</b> 70</li>
+                </ul>
+              </div>
+              <!-- Top Content List -->
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Top Viewed Content (July)
+                </h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                  <li><b>578K Views:</b> We Want You On Our R&D Team (8 Jul)</li>
+                  <li><b>11K Views:</b> Family Meal (30 Jul)</li>
+                  <li><b>6.8K Views:</b> Team Photo (31 Jul)</li>
+                  <li><b>3.8K Views:</b> Restaurant Exterior (8 Jul)</li>
+                  <li><b>Highest Paid Ad Views:</b> FARSA EVENT REEL TRAFFIC AD</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Paid Media Performance Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <h3 class="text-2xl font-semibold text-[#8B4513] mb-4">
+            Paid Media Performance - July 2025
+          </h3>
+          <div id="paidMediaContent">
+            <p class="text-sm font-medium text-gray-600 mb-6">
+              Total Amount Spent:
+              <span class="font-bold text-lg text-gray-900">₹13,465.78</span>
+            </p>
+            <!-- Scrollable container for the table -->
+            <div class="scrollable-table-container">
+              <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" class="py-3 px-6 rounded-tl-lg">
+                      Ad Name
+                    </th>
+                    <th scope="col" class="py-3 px-6">Objective</th>
+                    <th scope="col" class="py-3 px-6">Reach</th>
+                    <th scope="col" class="py-3 px-6">Results</th>
+                    <th scope="col" class="py-3 px-6 rounded-tr-lg">
+                      Amount Spent
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6 font-medium text-gray-900">
+                      FARSA EVENT REEL TRAFFIC AD
+                    </td>
+                    <td class="py-4 px-6">TRAFFIC CAMPAIGN</td>
+                    <td class="py-4 px-6">88,885</td>
+                    <td class="py-4 px-6">2,155 Clicks</td>
+                    <td class="py-4 px-6">₹6,795.34</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6 font-medium text-gray-900">
+                      FARSA VIDEOGRAPHER CUM EDITOR CREATIVE TRAFFIC AD
+                    </td>
+                    <td class="py-4 px-6">TRAFFIC CAMPAIGN</td>
+                    <td class="py-4 px-6">32,509</td>
+                    <td class="py-4 px-6">173 Messages</td>
+                    <td class="py-4 px-6">₹3,105.78</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6 font-medium text-gray-900">
+                      FARSA HIRING CREATIVE REACH AD (07-07 to 08-07)
+                    </td>
+                    <td class="py-4 px-6">REACH CAMPAIGN</td>
+                    <td class="py-4 px-6">71,093</td>
+                    <td class="py-4 px-6">71,093 Reach</td>
+                    <td class="py-4 px-6">₹212.42</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6 font-medium text-gray-900">
+                      FARSA HIRING CREATIVE REACH AD (08-07 to 10-07)
+                    </td>
+                    <td class="py-4 px-6">REACH CAMPAIGN</td>
+                    <td class="py-4 px-6">173,732</td>
+                    <td class="py-4 px-6">173,732 Reach</td>
+                    <td class="py-4 px-6">₹374.20</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6 font-medium text-gray-900">
+                      FARSA HIRING CREATIVE REACH AD (10-07 to 14-07)
+                    </td>
+                    <td class="py-4 px-6">REACH CAMPAIGN</td>
+                    <td class="py-4 px-6">373,144</td>
+                    <td class="py-4 px-6">373,144 Reach</td>
+                    <td class="py-4 px-6">₹923.94</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="bg-gray-50 font-semibold text-gray-900">
+                    <td
+                      colspan="4"
+                      class="py-4 px-6 text-right"
+                    >
+                      Total Spent (including GST)
+                    </td>
+                    <td class="py-4 px-6">₹13,465.78</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Work Log Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <div
+            class="collapsible-header no-print"
+            onclick="toggleCollapse('workLogContent')"
+          >
+            <h3 class="text-2xl font-semibold text-[#8B4513]">
+              Monthly Work Log - July 2025
+            </h3>
+            <svg
+              class="w-6 h-6 text-gray-500 transform rotate-0 transition-transform duration-300"
+              id="workLogIcon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </div>
+          <div id="workLogContent" class="collapsible-content hidden">
+            <div
+              class="flex flex-wrap gap-2 mb-4 no-print"
+              id="workLogFilters"
+            >
+              <button
+                class="filter-button"
+                data-type="all"
+              >
+                All
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA STORY">
+                Stories
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA POST">
+                Posts
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA REEL">
+                Reels
+              </button>
+              <button class="filter-button" data-type="COLLATERAL">
+                Collateral
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA POST & STORY">
+                Posts & Stories
+              </button>
+            </div>
+            <div class="scrollable-table-container">
+              <table
+                class="w-full text-sm text-left text-gray-500"
+                id="workLogTable"
+              >
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" class="py-3 px-6 rounded-tl-lg">SL No.</th>
+                    <th scope="col" class="py-3 px-6">Task</th>
+                    <th scope="col" class="py-3 px-6 rounded-tr-lg">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">1</td>
+                    <td class="py-4 px-6">GUEST VISIT CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">2</td>
+                    <td class="py-4 px-6">VS ACHUTHANDAN STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">3</td>
+                    <td class="py-4 px-6">PARENTS DAY CREATIVE & STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">4</td>
+                    <td class="py-4 px-6">BUSINESS CARD DESIGN x2</td>
+                    <td class="py-4 px-6">COLLATERAL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">5</td>
+                    <td class="py-4 px-6">TEAM BEYOND FITNESS STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">6</td>
+                    <td class="py-4 px-6">NOW OPEN STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">7</td>
+                    <td class="py-4 px-6">HIRING DATE CHANGED STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">8</td>
+                    <td class="py-4 px-6">REVIEW REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">9</td>
+                    <td class="py-4 px-6">TEAM V-WELL STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">10</td>
+                    <td class="py-4 px-6">ERI PORI RIB BIRYANI CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">11</td>
+                    <td class="py-4 px-6">HIRING CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">12</td>
+                    <td class="py-4 px-6">PUNCH REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">13</td>
+                    <td class="py-4 px-6">RAMOS REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">14</td>
+                    <td class="py-4 px-6">FAMILY REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">15</td>
+                    <td class="py-4 px-6">DELIVERY MOTION REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">16</td>
+                    <td class="py-4 px-6">ORDER REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">17</td>
+                    <td class="py-4 px-6">DEBIT CARD REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">18</td>
+                    <td class="py-4 px-6">HOME DELIVERY CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">19</td>
+                    <td class="py-4 px-6">OLIVE CHICKEN SALAD CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">20</td>
+                    <td class="py-4 px-6">PEPPER SALT CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">21</td>
+                    <td class="py-4 px-6">DRY FRUITS SALAD CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">22</td>
+                    <td class="py-4 px-6">INTERNATIONAL FRIENDSHIP DAY CREATIVE & STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST & STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">23</td>
+                    <td class="py-4 px-6">MEDICAL COLLEGE STUDENT'S STORY</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA STORY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">24</td>
+                    <td class="py-4 px-6">PARENT'S DAY REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">25</td>
+                    <td class="py-4 px-6">GUEST VISIT REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">26</td>
+                    <td class="py-4 px-6">WEDDING EVENT REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Work Scope Summary Section (moved to last) -->
+      <section class="bg-gray-100 rounded-2xl p-6 shadow-md mt-8 page-break">
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+          Work Scope Summary
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div
+            class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+          >
+            <span class="text-lg text-gray-500">Posts (Scope: 16)</span>
+            <span class="text-3xl font-bold text-gray-900">16 Completed</span>
+            <span class="text-green-600 font-semibold">Exceeded by 0</span>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+          >
+            <span class="text-lg text-gray-500">Videos (Scope: 12)</span>
+            <span class="text-3xl font-bold text-gray-900">10 Completed</span>
+            <span class="text-red-600 font-semibold">Lower by 2</span>
+          </div>
+          <div
+            class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+          >
+            <span class="text-lg text-gray-500">Collaterals (Scope: 5)</span>
+            <span class="text-3xl font-bold text-gray-900">2 Completed</span>
+            <span class="text-red-600 font-semibold">Lower by 3</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <script>
+      /**
+       * Toggles the visibility of a collapsible content section.
+       * @param {string} contentId The ID of the content element to toggle.
+       */
+      function toggleCollapse(contentId) {
+        const content = document.getElementById(contentId);
+        if (content) {
+          content.classList.toggle("hidden");
+          const iconId = contentId.replace("Content", "Icon");
+          const icon = document.getElementById(iconId);
+          if (icon) {
+            icon.classList.toggle("rotate-180");
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Data for the charts
+        const instagramFollowerGrowthData = {
+          labels: [
+            "Jul 1", "Jul 2", "Jul 3", "Jul 4", "Jul 5", "Jul 6", "Jul 7", "Jul 8", "Jul 9", "Jul 10",
+            "Jul 11", "Jul 12", "Jul 13", "Jul 14", "Jul 15", "Jul 16", "Jul 17", "Jul 18", "Jul 19", "Jul 20",
+            "Jul 21", "Jul 22", "Jul 23", "Jul 24", "Jul 25", "Jul 26", "Jul 27", "Jul 28", "Jul 29", "Jul 30", "Jul 31"
+          ],
+          datasets: [
+            {
+              label: "New Followers",
+              data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18], // Net growth 18
+              borderColor: "#8B4513", /* SaddleBrown */
+              backgroundColor: "rgba(139, 69, 19, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const instagramViewsByTypeData = {
+          labels: ["Stories", "Reels", "Posts"],
+          datasets: [
+            {
+              data: [38.9, 38.0, 23.1], // Percentages
+              backgroundColor: ["#8B4513", "#A0522D", "#D2B48C"], /* Brown shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const instagramInteractionsByTypeData = {
+          labels: ["Reels", "Stories", "Posts"],
+          datasets: [
+            {
+              data: [64.1, 24.0, 11.8], // Percentages
+              backgroundColor: ["#8B4513", "#A0522D", "#D2B48C"], /* Brown shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const facebookFollowerGrowthData = {
+          labels: [
+            "Jul 1",
+            "Jul 5",
+            "Jul 10",
+            "Jul 15",
+            "Jul 20",
+            "Jul 25",
+            "Jul 31",
+          ],
+          datasets: [
+            {
+              label: "New Followers",
+              data: [0, 2, 5, 10, 15, 18, 21],
+              borderColor: "#A0522D", /* Sienna */
+              backgroundColor: "rgba(160, 82, 45, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const facebookViewsByTypeData = {
+          labels: ["Reels", "Posts", "Stories"],
+          datasets: [
+            {
+              data: [350000, 250000, 103209], // Estimated from interactions and total views
+              backgroundColor: ["#A0522D", "#CD853F", "#F4A460"], /* Brown shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const facebookInteractionsByTypeData = {
+          labels: ["Reels", "Posts", "Stories"],
+          datasets: [
+            {
+              data: [40, 30, 21], // Estimated from interactions
+              backgroundColor: ["#A0522D", "#CD853F", "#F4A460"], /* Brown shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        // Data for Google My Business platform breakdown
+        const platformBreakdownData = {
+          labels: [
+            "Google Maps - mobile",
+            "Google Search - mobile",
+            "Google Search - desktop",
+            "Google Maps - desktop",
+          ],
+          datasets: [
+            {
+              data: [10125, 6068, 283, 57],
+              backgroundColor: ["#8B4513", "#A0522D", "#CD853F", "#F4A460"], /* Brown shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        // Data for Most Active Times Chart
+        const mostActiveTimesData = {
+          labels: ["12a", "3a", "6a", "9a", "12p", "3p", "6p", "9p"],
+          datasets: [
+            {
+              label: "Activity",
+              data: [20, 10, 30, 50, 60, 70, 80, 75], // Estimated from the bar chart image
+              backgroundColor: "#8B4513",
+            },
+          ],
+        };
+
+        // Chart configuration options
+        const chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                font: {
+                  family: "Inter",
+                },
+              },
+            },
+            tooltip: {
+              bodyFont: {
+                family: "Inter",
+              },
+            },
+          },
+        };
+
+        // Initialize Instagram Charts
+        const instagramFollowerGrowthChartCtx = document
+          .getElementById("followerGrowthChart")
+          .getContext("2d");
+        new Chart(instagramFollowerGrowthChartCtx, {
+          type: "line",
+          data: instagramFollowerGrowthData,
+          options: chartOptions,
+        });
+
+        const instagramViewsByTypeChartCtx = document
+          .getElementById("viewsByTypeChart")
+          .getContext("2d");
+        new Chart(instagramViewsByTypeChartCtx, {
+          type: "doughnut",
+          data: instagramViewsByTypeData,
+          options: chartOptions,
+        });
+
+        const instagramInteractionsByTypeChartCtx = document
+          .getElementById("interactionsByTypeChart")
+          .getContext("2d");
+        new Chart(instagramInteractionsByTypeChartCtx, {
+          type: "doughnut",
+          data: instagramInteractionsByTypeData,
+          options: chartOptions,
+        });
+
+        // Initialize Facebook Charts
+        const facebookFollowerGrowthChartCtx = document
+          .getElementById("facebookFollowerGrowthChart")
+          .getContext("2d");
+        new Chart(facebookFollowerGrowthChartCtx, {
+          type: "line",
+          data: facebookFollowerGrowthData,
+          options: chartOptions,
+        });
+
+        const facebookViewsByTypeChartCtx = document
+          .getElementById("facebookViewsByTypeChart")
+          .getContext("2d");
+        new Chart(facebookViewsByTypeChartCtx, {
+          type: "doughnut",
+          data: facebookViewsByTypeData,
+          options: chartOptions,
+        });
+
+        const facebookInteractionsByTypeChartCtx = document
+          .getElementById("facebookInteractionsByTypeChart")
+          .getContext("2d");
+        new Chart(facebookInteractionsByTypeChartCtx, {
+          type: "doughnut",
+          data: facebookInteractionsByTypeData,
+          options: chartOptions,
+        });
+        
+        // Initialize Google My Business Chart
+        const platformBreakdownChartCtx = document.getElementById("platformBreakdownChart").getContext("2d");
+        new Chart(platformBreakdownChartCtx, {
+          type: "doughnut",
+          data: platformBreakdownData,
+          options: chartOptions,
+        });
+
+        // Initialize Most Active Times Chart
+        const mostActiveTimesChartCtx = document.getElementById("mostActiveTimesChart").getContext("2d");
+        new Chart(mostActiveTimesChartCtx, {
+          type: "bar",
+          data: mostActiveTimesData,
+          options: {
+            ...chartOptions,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+
+        // Filter functionality for the Work Log table
+        const workLogTable = document.getElementById("workLogTable");
+        const filterButtons = document.querySelectorAll(
+          "#workLogFilters .filter-button"
+        );
+
+        /**
+         * Filters the work log table based on the selected type.
+         * @param {string} type The type to filter by (e.g., 'SOCIAL MEDIA POST').
+         */
+        function filterWorkLog(type) {
+          const rows = workLogTable.getElementsByTagName("tr");
+          for (let i = 1; i < rows.length; i++) {
+            // Start from 1 to skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 2) {
+              const taskType = cells[2].innerText.trim();
+              if (type === "all" || taskType === type) {
+                rows[i].style.display = "";
+              } else {
+                rows[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        // Add click event listeners to the filter buttons
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const selectedType = button.dataset.type;
+
+            // Remove active class from all buttons
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            // Add active class to the clicked button
+            button.classList.add("active");
+
+            // Apply the filter
+            filterWorkLog(selectedType);
+          });
+        });
+
+        // Initial filter for the "All" button
+        document.querySelector(".filter-button[data-type='all']").click();
+      });
+    </script>
+  </body>
+</html>
