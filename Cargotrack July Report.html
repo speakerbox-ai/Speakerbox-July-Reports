@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CARGOTRACK RELOCATIONS - Combined Report</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js CDN for creating interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6; /* Light gray background */
+        color: #1f2937; /* Dark gray text color */
+      }
+      .collapsible-header {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .collapsible-content {
+        display: block;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        max-height: 1000px; /* A large value to allow the content to expand */
+        opacity: 1;
+      }
+      .collapsible-content.hidden {
+        max-height: 0;
+        opacity: 0;
+        padding: 0; /* Remove padding when hidden */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      th {
+        background-color: #f9fafb;
+        font-weight: 600;
+      }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      .filter-button {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+      }
+      .filter-button.active {
+        background-color: #3B82F6; /* Blue */
+        color: white;
+      }
+      /* New styling for scrollable table container */
+      .scrollable-table-container {
+        max-height: 400px; /* Set a max height */
+        overflow-y: auto; /* Enable vertical scrolling */
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        background-color: #fff;
+        padding: 1rem;
+      }
+      /* Print-specific CSS */
+      @media print {
+        body {
+          background-color: #fff;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .collapsible-content.hidden {
+          display: block !important;
+          max-height: none !important;
+          opacity: 1 !important;
+        }
+        .collapsible-header {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+        .page-break {
+          page-break-before: always;
+        }
+        .scrollable-table-container {
+          max-height: none; /* No max height for print */
+          overflow-y: visible; /* No scrolling for print */
+        }
+      }
+    </style>
+  </head>
+  <body class="p-4 sm:p-8">
+    <div
+      class="max-w-7xl mx-auto bg-white shadow-xl rounded-3xl p-6 sm:p-10 mb-10"
+    >
+      <!-- Dashboard Header -->
+      <img
+        class="max-h-[70px] mb-5 object-contain w-max"
+        src="https://res.cloudinary.com/dghxwxviy/image/upload/v1755693451/black_svg_speakerbox_a7r6im.svg"
+        alt="Speaker Box Logo"
+      />
+      <header
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10"
+      >
+        <div class="text-center sm:text-left mb-4 sm:mb-0">
+          <h1 class="text-3xl sm:text-5xl font-bold text-[#3B82F6] mb-2">
+            CARGOTRACK RELOCATIONS
+          </h1>
+          <h2 class="text-xl sm:text-2xl text-gray-800 font-medium">
+            Interactive Analytics Report
+          </h2>
+          <p class="text-sm sm:text-lg text-gray-500 mt-2">
+            Last 30 Days (July 1 - July 31)
+          </p>
+        </div>
+        <button
+          id="printButton"
+          onclick="window.print()"
+          class="no-print bg-[#3B82F6] text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-[#2563EB] transition-colors duration-200"
+        >
+          Print Report
+        </button>
+      </header>
+
+      <!-- Main Content Grid -->
+      <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Instagram Overall Metrics Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Instagram Overall Performance
+          </h3>
+          <div id="overallPerformanceContent">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">1,382</span>
+                <span class="text-gray-500">Instagram Views</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">229</span>
+                <span class="text-gray-500">Total Profile Activity</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">23</span>
+                <span class="text-gray-500">New Followers (+130% vs previous month)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">547</span>
+                <span class="text-gray-500">Accounts Reached (+2.6% vs previous month)</span>
+              </div>
+            </div>
+
+            <!-- Link Taps -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Instagram Link Taps
+              </h4>
+              <p class="text-gray-600 text-sm">
+                <span class="text-[#3B82F6] font-bold">0</span> external link
+                taps recorded.
+              </p>
+            </div>
+
+            <!-- Follower Growth Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                New Followers (Net: +23)
+              </h4>
+              <canvas id="followerGrowthChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Facebook Overall Metrics Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Facebook Overall Performance
+          </h3>
+          <div id="facebookOverallPerformanceContent">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">1,403</span>
+                <span class="text-gray-500">Facebook Views (+57.5% vs previous month)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">195</span>
+                <span class="text-gray-500">Page Engagements (+52.3% vs previous month)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">39</span>
+                <span class="text-gray-500">New Followers (+875% vs previous month)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">393</span>
+                <span class="text-gray-500">Accounts Reached (+128.5% vs previous month)</span>
+              </div>
+            </div>
+
+            <!-- Link Taps -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Facebook Link Taps
+              </h4>
+              <p class="text-gray-600 text-sm">
+                <span class="text-[#3B82F6] font-bold">0</span> external link
+                taps recorded.
+              </p>
+            </div>
+
+            <!-- Follower Growth Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                New Followers (Net: +39)
+              </h4>
+              <canvas id="facebookFollowerGrowthChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Instagram Content & Audience Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Instagram Content & Audience
+          </h3>
+          <div id="contentAndAudienceContent">
+            <!-- Views by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Views by Content Type (Instagram)
+              </h4>
+              <canvas id="viewsByTypeChart"></canvas>
+            </div>
+
+            <!-- Interactions by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Interactions by Content Type (Estimated)
+              </h4>
+              <canvas id="interactionsByTypeChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Facebook Content & Audience Section -->
+        <section class="bg-gray-100 rounded-2xl p-6 shadow-md">
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Facebook Content & Audience
+          </h3>
+          <div id="facebookContentAndAudienceContent">
+            <!-- Views by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Views by Content Type (Facebook)
+              </h4>
+              <canvas id="facebookViewsByTypeChart"></canvas>
+            </div>
+
+            <!-- Interactions by Content Type Chart -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6 h-72">
+              <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                Interactions by Content Type (Estimated)
+              </h4>
+              <canvas id="facebookInteractionsByTypeChart"></canvas>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Google My Business Analytics - Jeddah Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Google My Business Analytics - Jeddah
+          </h3>
+          <div id="googleAnalyticsJeddahContent">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">164</span>
+                <span class="text-gray-500">Business Profile Interactions (+39.0% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">1,588</span>
+                <span class="text-gray-500">Profile Views (+27.0% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">48</span>
+                <span class="text-gray-500">Calls (+108.7% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">85</span>
+                <span class="text-gray-500">Direction Requests (+11.8% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">31</span>
+                <span class="text-gray-500">Website Clicks (+63.2% vs Jul 2024)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Search Breakdown -->
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Search Breakdown (Total: 138, -6.1% vs Jul 2024)
+                </h4>
+                <div class="scrollable-table-container">
+                  <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                      <tr>
+                        <th class="py-3 px-6 rounded-tl-lg">Search Term</th>
+                        <th class="py-3 px-6 rounded-tr-lg">Count</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          cargo
+                        </td>
+                        <td class="py-4 px-6">38</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          moving
+                        </td>
+                        <td class="py-4 px-6">37</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          cargo jeddah
+                        </td>
+                        <td class="py-4 px-6">25</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          cargotrack relocations, jeddah
+                        </td>
+                        <td class="py-4 px-6">19</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          خدمات نقل وتخزين
+                        </td>
+                        <td class="py-4 px-6">19</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Platform & Device Breakdown Chart -->
+              <div class="bg-white rounded-xl p-4 shadow-sm h-80">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Platform & Device Breakdown
+                </h4>
+                <canvas id="platformBreakdownJeddahChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Google My Business Analytics - Riyadh Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Google My Business Analytics - Riyadh
+          </h3>
+          <div id="googleAnalyticsRiyadhContent">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">16</span>
+                <span class="text-gray-500">Business Profile Interactions (-86.3% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">195</span>
+                <span class="text-gray-500">Profile Views (-66.9% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">5</span>
+                <span class="text-gray-500">Calls (-73.7% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">5</span>
+                <span class="text-gray-500">Direction Requests (-94.1% vs Jul 2024)</span>
+              </div>
+              <div
+                class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start"
+              >
+                <span class="text-4xl font-bold text-gray-900">6</span>
+                <span class="text-gray-500">Website Clicks (-53.8% vs Jul 2024)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Search Breakdown -->
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Search Breakdown (Total: <15 for each term)
+                </h4>
+                <div class="scrollable-table-container">
+                  <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                      <tr>
+                        <th class="py-3 px-6 rounded-tl-lg">Search Term</th>
+                        <th class="py-3 px-6 rounded-tr-lg">Count</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          cargo track
+                        </td>
+                        <td class="py-4 px-6">&lt; 15</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          household moving
+                        </td>
+                        <td class="py-4 px-6">&lt; 15</td>
+                      </tr>
+                      <tr>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                          moving furniture company
+                        </td>
+                        <td class="py-4 px-6">&lt; 15</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Platform & Device Breakdown Chart -->
+              <div class="bg-white rounded-xl p-4 shadow-sm h-80">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Platform & Device Breakdown
+                </h4>
+                <canvas id="platformBreakdownRiyadhChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Profile Activity & Top Content Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2"
+        >
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Profile Activity & Top Content
+          </h3>
+          <div id="profileActivityContent">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <!-- Profile Activity Metrics -->
+              <div>
+                <div
+                  class="bg-white rounded-xl p-4 shadow-sm flex flex-col items-start mb-4"
+                >
+                  <span class="text-4xl font-bold text-gray-900">229</span>
+                  <span class="text-gray-500">Total Instagram Profile Visits</span>
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-gray-600 bg-white rounded-xl p-4 shadow-sm"
+                >
+                  <li><b>Instagram Profile Visits:</b> 229</li>
+                  <li><b>Facebook Page Visits:</b> 195</li>
+                </ul>
+              </div>
+              <!-- Top Content List -->
+              <div class="bg-white rounded-xl p-4 shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                  Top Viewed Content (July)
+                </h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                  <li><b>Highest Views:</b> OFFICE RELOCATION CREATIVE</li>
+                  <li><b>Second Highest Views:</b> EUROPE GROUPAGE CREATIVE</li>
+                  <li><b>Popular:</b> SCHOOL RELOCATION CREATIVE</li>
+                  <li><b>Engaging:</b> CAR RELOCATION CREATIVE</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Paid Media Performance Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <h3 class="text-2xl font-semibold text-[#3B82F6] mb-4">
+            Paid Media Performance - July 2025
+          </h3>
+          <div id="paidMediaContent">
+            <p class="text-sm font-medium text-gray-600 mb-6">
+              Total Amount Spent:
+              <span class="font-bold text-lg text-gray-900">₹0.00</span> <!-- No paid media data provided in the PDF for Cargotrack -->
+            </p>
+            <!-- Scrollable container for the table -->
+            <div class="scrollable-table-container">
+              <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" class="py-3 px-6 rounded-tl-lg">
+                      Ad Name
+                    </th>
+                    <th scope="col" class="py-3 px-6">Objective</th>
+                    <th scope="col" class="py-3 px-6">Reach</th>
+                    <th scope="col" class="py-3 px-6">Results</th>
+                    <th scope="col" class="py-3 px-6 rounded-tr-lg">
+                      Amount Spent
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white">
+                    <td colspan="5" class="py-4 px-6 text-center text-gray-500">
+                      No Paid Media Campaign data available for July 2025.
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="bg-gray-50 font-semibold text-gray-900">
+                    <td
+                      colspan="4"
+                      class="py-4 px-6 text-right"
+                    >
+                      Total Spent (including GST)
+                    </td>
+                    <td class="py-4 px-6">₹0.00</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Work Log Section -->
+        <section
+          class="bg-gray-100 rounded-2xl p-6 shadow-md md:col-span-2 mt-8 page-break"
+        >
+          <div
+            class="collapsible-header no-print"
+            onclick="toggleCollapse('workLogContent')"
+          >
+            <h3 class="text-2xl font-semibold text-[#3B82F6]">
+              Monthly Work Log - July 2025
+            </h3>
+            <svg
+              class="w-6 h-6 text-gray-500 transform rotate-0 transition-transform duration-300"
+              id="workLogIcon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </div>
+          <div id="workLogContent" class="collapsible-content hidden">
+            <div
+              class="flex flex-wrap gap-2 mb-4 no-print"
+              id="workLogFilters"
+            >
+              <button
+                class="filter-button"
+                data-type="all"
+              >
+                All
+              </button>
+              <button class="filter-button" data-type="STATIONARY">
+                Stationary
+              </button>
+              <button class="filter-button" data-type="COLLATERAL">
+                Collateral
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA POST">
+                Posts
+              </button>
+              <button class="filter-button" data-type="SOCIAL MEDIA REEL">
+                Reels
+              </button>
+            </div>
+            <div class="scrollable-table-container">
+              <table
+                class="w-full text-sm text-left text-gray-500"
+                id="workLogTable"
+              >
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th scope="col" class="py-3 px-6 rounded-tl-lg">SL No.</th>
+                    <th scope="col" class="py-3 px-6">Task</th>
+                    <th scope="col" class="py-3 px-6 rounded-tr-lg">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">1</td>
+                    <td class="py-4 px-6">EMAIL SIGNATURE DESIGN</td>
+                    <td class="py-4 px-6">STATIONARY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">2</td>
+                    <td class="py-4 px-6">ID CARD DESIGN</td>
+                    <td class="py-4 px-6">STATIONARY</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">3</td>
+                    <td class="py-4 px-6">FLYER DESIGN 1</td>
+                    <td class="py-4 px-6">COLLATERAL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">4</td>
+                    <td class="py-4 px-6">FLYER DESIGN 2</td>
+                    <td class="py-4 px-6">COLLATERAL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">5</td>
+                    <td class="py-4 px-6">OFFICE RELOCATION CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">6</td>
+                    <td class="py-4 px-6">BUSINESS CARD DESIGN</td>
+                    <td class="py-4 px-6">COLLATERAL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">7</td>
+                    <td class="py-4 px-6">BROCHURE UPDATE</td>
+                    <td class="py-4 px-6">COLLATERAL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">8</td>
+                    <td class="py-4 px-6">EXHIBITION RELOCATING REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">9</td>
+                    <td class="py-4 px-6">EUROPE GROUPAGE CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">10</td>
+                    <td class="py-4 px-6">SCHOOL RELOCATION CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">11</td>
+                    <td class="py-4 px-6">CAR RELOCATION REEL</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA REEL</td>
+                  </tr>
+                  <tr class="bg-white">
+                    <td class="py-4 px-6">12</td>
+                    <td class="py-4 px-6">CAR RELOCATION CREATIVE</td>
+                    <td class="py-4 px-6">SOCIAL MEDIA POST</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      /**
+       * Toggles the visibility of a collapsible content section.
+       * @param {string} contentId The ID of the content element to toggle.
+       */
+      function toggleCollapse(contentId) {
+        const content = document.getElementById(contentId);
+        if (content) {
+          content.classList.toggle("hidden");
+          const iconId = contentId.replace("Content", "Icon");
+          const icon = document.getElementById(iconId);
+          if (icon) {
+            icon.classList.toggle("rotate-180");
+          }
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Data for the charts
+        const instagramFollowerGrowthData = {
+          labels: [
+            "Jul 1", "Jul 5", "Jul 10", "Jul 15", "Jul 20", "Jul 25", "Jul 31",
+          ],
+          datasets: [
+            {
+              label: "New Followers",
+              data: [0, 5, 10, 15, 20, 22, 23],
+              borderColor: "#3B82F6", /* Blue */
+              backgroundColor: "rgba(59, 130, 246, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const instagramViewsByTypeData = {
+          labels: ["Posts", "Reels", "Stories"],
+          datasets: [
+            {
+              data: [600, 400, 382], // Placeholder data
+              backgroundColor: ["#3B82F6", "#60A5FA", "#93C5FD"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const instagramInteractionsByTypeData = {
+          labels: ["Posts", "Reels", "Stories"],
+          datasets: [
+            {
+              data: [100, 70, 59], // Placeholder data
+              backgroundColor: ["#3B82F6", "#60A5FA", "#93C5FD"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const facebookFollowerGrowthData = {
+          labels: [
+            "Jul 1", "Jul 5", "Jul 10", "Jul 15", "Jul 20", "Jul 25", "Jul 31",
+          ],
+          datasets: [
+            {
+              label: "New Followers",
+              data: [0, 5, 10, 20, 30, 35, 39],
+              borderColor: "#1D4ED8", /* Darker Blue */
+              backgroundColor: "rgba(29, 78, 216, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        };
+
+        const facebookViewsByTypeData = {
+          labels: ["Posts", "Reels", "Stories"],
+          datasets: [
+            {
+              data: [700, 400, 303], // Estimated from interactions and total views
+              backgroundColor: ["#1D4ED8", "#3B82F6", "#60A5FA"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        const facebookInteractionsByTypeData = {
+          labels: ["Posts", "Reels", "Stories"],
+          datasets: [
+            {
+              data: [10, 6, 4], // Estimated from interactions
+              backgroundColor: ["#1D4ED8", "#3B82F6", "#60A5FA"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        // Data for Google My Business platform breakdown - Jeddah
+        const platformBreakdownJeddahData = {
+          labels: [
+            "Google Maps - mobile",
+            "Google Search - mobile",
+            "Google Search - desktop",
+            "Google Maps - desktop",
+          ],
+          datasets: [
+            {
+              data: [638, 603, 275, 72],
+              backgroundColor: ["#3B82F6", "#60A5FA", "#93C5FD", "#BFDBFE"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+        // Data for Google My Business platform breakdown - Riyadh
+        const platformBreakdownRiyadhData = {
+          labels: [
+            "Google Search - mobile",
+            "Google Maps - mobile",
+            "Google Search - desktop",
+            "Google Maps - desktop",
+          ],
+          datasets: [
+            {
+              data: [86, 50, 42, 17],
+              backgroundColor: ["#3B82F6", "#60A5FA", "#93C5FD", "#BFDBFE"], /* Blue shades */
+              hoverOffset: 4,
+            },
+          ],
+        };
+
+
+        // Chart configuration options
+        const chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                font: {
+                  family: "Inter",
+                },
+              },
+            },
+            tooltip: {
+              bodyFont: {
+                family: "Inter",
+              },
+            },
+          },
+        };
+
+        // Initialize Instagram Charts
+        const instagramFollowerGrowthChartCtx = document
+          .getElementById("followerGrowthChart")
+          .getContext("2d");
+        new Chart(instagramFollowerGrowthChartCtx, {
+          type: "line",
+          data: instagramFollowerGrowthData,
+          options: chartOptions,
+        });
+
+        const instagramViewsByTypeChartCtx = document
+          .getElementById("viewsByTypeChart")
+          .getContext("2d");
+        new Chart(instagramViewsByTypeChartCtx, {
+          type: "doughnut",
+          data: instagramViewsByTypeData,
+          options: chartOptions,
+        });
+
+        const instagramInteractionsByTypeChartCtx = document
+          .getElementById("interactionsByTypeChart")
+          .getContext("2d");
+        new Chart(instagramInteractionsByTypeChartCtx, {
+          type: "doughnut",
+          data: instagramInteractionsByTypeData,
+          options: chartOptions,
+        });
+
+        // Initialize Facebook Charts
+        const facebookFollowerGrowthChartCtx = document
+          .getElementById("facebookFollowerGrowthChart")
+          .getContext("2d");
+        new Chart(facebookFollowerGrowthChartCtx, {
+          type: "line",
+          data: facebookFollowerGrowthData,
+          options: chartOptions,
+        });
+
+        const facebookViewsByTypeChartCtx = document
+          .getElementById("facebookViewsByTypeChart")
+          .getContext("2d");
+        new Chart(facebookViewsByTypeChartCtx, {
+          type: "doughnut",
+          data: facebookViewsByTypeData,
+          options: chartOptions,
+        });
+
+        const facebookInteractionsByTypeChartCtx = document
+          .getElementById("facebookInteractionsByTypeChart")
+          .getContext("2d");
+        new Chart(facebookInteractionsByTypeChartCtx, {
+          type: "doughnut",
+          data: facebookInteractionsByTypeData,
+          options: chartOptions,
+        });
+        
+        // Initialize Google My Business Charts - Jeddah
+        const platformBreakdownJeddahChartCtx = document.getElementById("platformBreakdownJeddahChart").getContext("2d");
+        new Chart(platformBreakdownJeddahChartCtx, {
+          type: "doughnut",
+          data: platformBreakdownJeddahData,
+          options: chartOptions,
+        });
+
+        // Initialize Google My Business Charts - Riyadh
+        const platformBreakdownRiyadhChartCtx = document.getElementById("platformBreakdownRiyadhChart").getContext("2d");
+        new Chart(platformBreakdownRiyadhChartCtx, {
+          type: "doughnut",
+          data: platformBreakdownRiyadhData,
+          options: chartOptions,
+        });
+
+
+        // Filter functionality for the Work Log table
+        const workLogTable = document.getElementById("workLogTable");
+        const filterButtons = document.querySelectorAll(
+          "#workLogFilters .filter-button"
+        );
+
+        /**
+         * Filters the work log table based on the selected type.
+         * @param {string} type The type to filter by (e.g., 'SOCIAL MEDIA POST').
+         */
+        function filterWorkLog(type) {
+          const rows = workLogTable.getElementsByTagName("tr");
+          for (let i = 1; i < rows.length; i++) {
+            // Start from 1 to skip the header row
+            const cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 2) {
+              const taskType = cells[2].innerText.trim();
+              if (type === "all" || taskType === type) {
+                rows[i].style.display = "";
+              } else {
+                rows[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        // Add click event listeners to the filter buttons
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const selectedType = button.dataset.type;
+
+            // Remove active class from all buttons
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            // Add active class to the clicked button
+            button.classList.add("active");
+
+            // Apply the filter
+            filterWorkLog(selectedType);
+          });
+        });
+
+        // Initial filter for the "All" button
+        document.querySelector(".filter-button[data-type='all']").click();
+      });
+    </script>
+  </body>
+</html>
